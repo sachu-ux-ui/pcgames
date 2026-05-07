@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        function showCart(productId) {
+            document.getElementById('cart-section-' + productId).classList.remove('hidden');
+        }
+
+        function showWishlist(productId) {
+            document.getElementById('wishlist-section-' + productId).classList.remove('hidden');
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100 p-6">
+
+<h1 class="text-3xl font-bold text-center mb-8">Products</h1>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    {% for product in p %}
+    <div class="bg-white p-5 rounded-2xl shadow-lg hover:shadow-xl transition">
+
+        <div id="view{{ product.id }}">
+        <img src="{{ product.Image.url }}" class="w-full h-48 object-cover rounded-lg mb-4">
+
+        <h2 class="text-xl font-semibold">{{ product.name }}</h2>
+        <p class="text-gray-600 text-sm mb-2">{{ product.description }}</p>
+
+        <p class="font-bold text-green-600 mb-1">₹ {{ product.Price }}</p>
+        <p class="text-sm">Qty: {{ product.Quantity }}</p>
+        <p class="text-sm mb-3">{{ product.category }}</p>
+
+        <div class="flex gap-2">
+            <button onclick="showCart('{{ product.id }}')" 
+                class="w-1/2 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition">
+                Add to Cart
+            </button>
+
+            <button onclick="showWishlist('{{ product.id }}')" 
+                class="w-1/2 bg-pink-500 text-white py-2 rounded-xl hover:bg-pink-600 transition">
+                Wishlist
+            </button>
+        </div>
+
+        <div id="cart-section-{{ product.id }}" class="hidden mt-4">
+            <form method="POST" action="{% url 'add_to_cart' product.id %}">
+                {% csrf_token %}
+
+                <input type="number" name="quantity" value="1" min="1"
+                    class="w-full border rounded-lg px-3 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400">
+
+                <button type="submit"
+                    class="w-full bg-green-600 text-white py-2 rounded-xl hover:bg-green-700 transition">
+                    Confirm Add
+                </button>
+            </form>
+        </div>
+
+        <div id="wishlist-section-{{ product.id }}" class="hidden mt-4">
+            <form method="POST" action="{% url 'add_to_wishlist' product.id %}">
+                {% csrf_token %}
+
+                <button type="submit"
+                    class="w-full bg-pink-600 text-white py-2 rounded-xl hover:bg-pink-700 transition">
+                    Confirm Wishlist
+                </button>
+            </form>
+        </div>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

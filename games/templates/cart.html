@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head><title>Cart</title></head>
+<body>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+        <a href="{% url 'login' %}">Login</a>
+    {% else %}
+        <h1>Your Cart</h1>
+        <table border="1">
+            <tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th><th>Action</th></tr>
+            {% for item in cart_items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.product.price }}</td>
+                <td>${{ item.total_price }}</td>
+                <td>
+                    <form method="post" action="{% url 'delete_cart' item.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">Cart is empty.</td></tr>
+            {% endfor %}
+        </table>
+        {% if total_price %}
+            <h3>Total: ${{ total_price }}</h3>
+        {% endif %}
+    {% endif %}
+    <a href="{% url 'product_list' %}">Continue Shopping</a>
+</body>
+</html>
