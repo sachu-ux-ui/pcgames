@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 def index(request):
     p = products.objects.all()[:6]  # limit 6
     return render(request, 'index.html', {'products': p})
+    
 def add_products(request):
     if request.method == 'POST':
         name = request.POST.get('name')
